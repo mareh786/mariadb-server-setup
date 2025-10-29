@@ -1,0 +1,3 @@
+CREATE USER 'repluser'@'%' IDENTIFIED BY 'replpass';
+GRANT REPLICATION SLAVE ON *.* TO 'repluser'@'%';
+FLUSH PRIVILEGES;

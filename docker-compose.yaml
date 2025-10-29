@@ -1,0 +1,49 @@
+version: "3.9"
+ 
+services:
+  mariadb-master:
+    image: mariadb:11.4
+    container_name: mariadb-master
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+      MYSQL_REPLICATION_USER: repluser
+      MYSQL_REPLICATION_PASSWORD: replpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./master/data:/var/lib/mysql
+      - ./master/config:/etc/mysql/conf.d
+      - ./master/init:/docker-entrypoint-initdb.d
+    networks:
+      - mariadb-net
+ 
+  mariadb-slave:
+    image: mariadb:11.4
+    container_name: mariadb-slave
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+      MYSQL_REPLICATION_USER: repluser
+      MYSQL_REPLICATION_PASSWORD: replpass
+      MASTER_HOST: mariadb-master
+    depends_on:
+      - mariadb-master
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./slave/data:/var/lib/mysql
+      - ./slave/config:/etc/mysql/conf.d
+      - ./slave/init:/docker-entrypoint-initdb.d
+    networks:
+      - mariadb-net
+ 
+networks:
+  mariadb-net:
+    driver: bridge
