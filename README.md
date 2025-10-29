@@ -6,3 +6,5 @@ git clone https://github.com/mareh786/mariadb-server-setup.git
 cd mariadb-server-setup/  
 **Docker Compose Build**  
 docker compose up -d  
+**Check the Connection**  
+docker exec -it  ..  
